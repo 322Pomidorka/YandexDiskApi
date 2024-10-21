@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Загрузка файлов с Яндекс.Диска</title>
+</head>
+<body>
+<div class="container">
+	<h2>Загрузка файлов с Яндекс.Диска</h2>
+
+	<form method="post">
+		{% csrf_token %}
+		<div class="form-group">
+			<label for="public_key">{{ form.public_key.label }}</label>
+			{{ form.public_key }}
+		</div>
+
+		<div class="form-group">
+			<label for="type">Фильтр по типу файлов:</label>
+			<select name="filter" id="type">
+				{% for value, label in form.filter.field.choices %}
+					<option value="{{ value }}" {% if form.filter.value == value %}selected{% endif %}>
+						{{ label }}
+					</option>
+				{% endfor %}
+			</select>
+		</div>
+
+		<div class="form-group">
+			<button type="submit">Получить список файлов</button>
+		</div>
+	</form>
+
+	{% if files %}
+		<h3>Список файлов:</h3>
+		<ul>
+			{% for item in files %}
+				<li>{{ item.name }} - <a href="{{ item.file }}" download>Скачать</a></li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>Список файлов пуст.</p>
+	{% endif %}
+</div>
+</body>
+</html>
